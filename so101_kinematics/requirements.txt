@@ -1,0 +1,15 @@
+# Python version
+python==3.10.*
+
+# Core dependencies
+numpy>=1.24
+scipy>=1.10
+matplotlib>=3.8
+pandas>=2.1
+draccus>=0.5
+tqdm
+pathlib
+typing-extensions
+
+# LeRobot with Feetech SDK support
+lerobot[feetech] @ git+https://github.com/huggingface/lerobot.git
