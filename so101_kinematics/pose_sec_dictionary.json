@@ -1,0 +1,114 @@
+{
+  "intro": [
+    {
+      "name": "intro_zero",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": 0.0,
+      "elbow_flex": 0.0,
+      "wrist_flex": 0.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    },
+    {
+      "name": "intro_small_lift",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": 20.0,
+      "elbow_flex": -45.0,
+      "wrist_flex": 0.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    }
+  ],
+
+  "verse": [
+    {
+      "name": "diagonal",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": 45.0,
+      "elbow_flex": -90,
+      "wrist_flex": 0.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    },
+    {
+      "name": "forward_reach",
+      "shoulder_pan": 0,
+      "shoulder_lift": 45.0,
+      "elbow_flex": -90.0,
+      "wrist_flex": 90.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    },
+    {
+      "name": "vertical_arm",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": 0.0,
+      "elbow_flex": -90.0,
+      "wrist_flex": 0.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    }
+  ],
+  "chorus":[
+    {
+      "name": "vertical_arm",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": 0.0,
+      "elbow_flex": -90.0,
+      "wrist_flex": 0.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    },
+    {
+      "name": "backward_reach",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": -45.0,
+      "elbow_flex": -90.0,
+      "wrist_flex": -90.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    }
+  ],
+
+  "inst": [
+    {
+      "name": "backward_reach",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": -45.0,
+      "elbow_flex": -90.0,
+      "wrist_flex": -90.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    },
+    {
+      "name": "forward_reach_wide",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": 30.0,
+      "elbow_flex": -110.0,
+      "wrist_flex": 40.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    }
+  ],
+
+  "end": [
+    {
+      "name": "end_zero",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": 0.0,
+      "elbow_flex": 0.0,
+      "wrist_flex": 0.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    },
+    {
+      "name": "end_rest",
+      "shoulder_pan": 0.0,
+      "shoulder_lift": -20.0,
+      "elbow_flex": -45.0,
+      "wrist_flex": 0.0,
+      "wrist_roll": 0.0,
+      "gripper": 0.0
+    }
+  ]
+}

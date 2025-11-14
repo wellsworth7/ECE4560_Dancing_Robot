@@ -299,7 +299,11 @@ def move_to_pose_quintic2(bus, start_position, desired_position, duration,
     v_end = {j: v0_dict.get(j,0.0) + 2*a2[j]*T + 3*a3[j]*T**2 + 4*a4[j]*T**3 + 5*a5[j]*T**4
              for j in active_joints}
     return v_end
-
+JOINT_LIMITS = {
+    "shoulder_pan": (-90, 90),
+    "wrist_roll": (-165, 165),
+    "gripper": (4, 95)
+}
 def perform_quintic_move_smooth(bus, start_pose, target_pose, move_duration, v_prev, sign_toggle):
     """
     Smooth motion from start -> target using quintic trajectory.
@@ -345,8 +349,10 @@ def perform_quintic_move_smooth(bus, start_pose, target_pose, move_duration, v_p
             # Add midpoint bump for wrist/gripper
             if j in bump_joints:
                 q += bump_amplitude[j] * np.sin(np.pi * t / move_duration)
+            lo, hi = JOINT_LIMITS.get(j, (-999, 999))
+            q = np.clip(q, lo, hi)
             pos_dict[j] = q
-
+        # print(f"[DEBUG] t={t:.3f}s pos_dict: {pos_dict}")
         bus.sync_write("Goal_Position", offset_config(pos_dict), normalize=True)
         time.sleep(dt)
 
