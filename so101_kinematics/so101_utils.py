@@ -55,7 +55,7 @@ def setup_motors(calibration, PORT_ID, gains=None):
             )
     bus.connect(True)
     if gains is None:
-        gains = {"P": 16, "I": 0, "D": 32}
+        gains = {"P": 16, "I": 0, "D": 1}
     with bus.torque_disabled():
         bus.configure_motors()
         for name, motor in bus.motors.items():
@@ -304,64 +304,175 @@ JOINT_LIMITS = {
     "wrist_roll": (-165, 165),
     "gripper": (4, 95)
 }
-def perform_quintic_move_smooth(bus, start_pose, target_pose, move_duration, v_prev, sign_toggle):
+# def perform_quintic_move_smooth(bus, start_pose, target_pose, move_duration, v_prev, sign_toggle):
+#     """
+#     Smooth motion from start -> target using quintic trajectory.
+#     - Adds expressive midpoint bump for wrist_roll and gripper.
+#     - Computes end velocities for smooth continuity.
+#     """
+#     start_time = time.perf_counter()
+#     dt = 0.02  # control loop timestep
+
+#     # Precompute quintic coefficients for all joints (start -> target)
+#     a0, a1, a2, a3, a4, a5 = {}, {}, {}, {}, {}, {}
+#     for j in start_pose:
+#         q0 = start_pose[j]
+#         qf = target_pose[j]
+#         v0 = v_prev.get(j, 0.0)
+#         vf = 0.0  # final velocity zero
+#         acc0 = 0.0
+#         accf = 0.0
+
+#         T = move_duration
+#         a0[j] = q0
+#         a1[j] = v0
+#         a2[j] = acc0 / 2
+#         a3[j] = (20*(qf - q0) - (8*vf + 12*v0)*T - (3*acc0 - accf)*T**2) / (2*T**3)
+#         a4[j] = (30*(q0 - qf) + (14*vf + 16*v0)*T + (3*acc0 - 2*accf)*T**2) / (2*T**4)
+#         a5[j] = (12*(qf - q0) - (6*vf + 6*v0)*T - (acc0 - accf)*T**2) / (2*T**5)
+
+#     # Midpoint bump parameters for expressive joints
+#     bump_joints = ["wrist_roll", "gripper"]
+#     bump_amplitude = {
+#         "wrist_roll": 0.8*(JOINT_LIMITS["wrist_roll"][1]-JOINT_LIMITS["wrist_roll"][0])/2 * sign_toggle,
+#         "gripper": 0.6*(JOINT_LIMITS["gripper"][1]-JOINT_LIMITS["gripper"][0])
+#     }
+
+#     while True:
+#         t = time.perf_counter() - start_time
+#         if t > move_duration:
+#             break
+
+#         pos_dict = {}
+#         for j in start_pose:
+#             q = a0[j] + a1[j]*t + a2[j]*t**2 + a3[j]*t**3 + a4[j]*t**4 + a5[j]*t**5
+#             # Add midpoint bump for wrist/gripper
+#             if j in bump_joints:
+#                 q += bump_amplitude[j] * np.sin(np.pi * t / move_duration)
+#             lo, hi = JOINT_LIMITS.get(j, (-999, 999))
+#             q = np.clip(q, lo, hi)
+#             pos_dict[j] = q
+#         # print(f"[DEBUG] t={t:.3f}s pos_dict: {pos_dict}")
+#         bus.sync_write("Goal_Position", offset_config(pos_dict), normalize=True)
+#         time.sleep(dt)
+
+#     # Ensure final position is exactly reached
+#     bus.sync_write("Goal_Position", offset_config(target_pose), normalize=True)
+
+#     # Compute end velocities (for continuity to next segment)
+#     v_end = {}
+#     for j in start_pose:
+#         T = move_duration
+#         v_end[j] = a1[j] + 2*a2[j]*T + 3*a3[j]*T**2 + 4*a4[j]*T**3 + 5*a5[j]*T**4
+#     return v_end
+
+import time
+import numpy as np
+from pathlib import Path
+
+# Ensure plots folder exists
+PLOTS_DIR = Path(__file__).parent / "plots"
+PLOTS_DIR.mkdir(exist_ok=True)
+
+# -----------------------------
+# Continuous joint logger
+# -----------------------------
+class JointLogger:
+    def __init__(self, joint_names):
+        self.joint_names = joint_names
+        self.pos = {j: [] for j in joint_names}
+        self.vel = {j: [] for j in joint_names}
+        self.acc = {j: [] for j in joint_names}
+        self.timestamps = []
+
+    def log(self, pos_dict, vel_dict=None, acc_dict=None):
+        t = time.time()
+        self.timestamps.append(t)
+        for j in self.joint_names:
+            self.pos[j].append(pos_dict[j])
+            if vel_dict:
+                self.vel[j].append(vel_dict[j])
+            if acc_dict:
+                self.acc[j].append(acc_dict[j])
+
+    def save(self, filename):
+        np.savez_compressed(
+            filename,
+            pos=np.array([self.pos[j] for j in self.joint_names]),
+            vel=np.array([self.vel[j] for j in self.joint_names]),
+            acc=np.array([self.acc[j] for j in self.joint_names]),
+            joints=self.joint_names,
+            timestamps=np.array(self.timestamps)
+        )
+        print(f"[INFO] Joint log saved to {filename}")
+
+
+# -----------------------------
+# Quintic move with logging
+# -----------------------------
+def perform_quintic_move(bus, start_pose, target_pose, move_duration, v_prev, sign_toggle,
+                         dt=0.005, logger: JointLogger=None, active_joints=None):
     """
-    Smooth motion from start -> target using quintic trajectory.
-    - Adds expressive midpoint bump for wrist_roll and gripper.
-    - Computes end velocities for smooth continuity.
+    Smooth quintic move with optional continuous logging.
     """
     start_time = time.perf_counter()
-    dt = 0.02  # control loop timestep
+    v_prev = v_prev or {j:0.0 for j in start_pose}
+    active_joints = active_joints or list(start_pose.keys())
+    joint_names = list(start_pose.keys())
 
-    # Precompute quintic coefficients for all joints (start -> target)
-    a0, a1, a2, a3, a4, a5 = {}, {}, {}, {}, {}, {}
-    for j in start_pose:
-        q0 = start_pose[j]
-        qf = target_pose[j]
-        v0 = v_prev.get(j, 0.0)
-        vf = 0.0  # final velocity zero
-        acc0 = 0.0
-        accf = 0.0
-
-        T = move_duration
+    # Precompute quintic coefficients
+    T = move_duration
+    a0,a1,a2,a3,a4,a5 = {},{},{},{},{},{}
+    for j in active_joints:
+        q0, qf = start_pose[j], target_pose[j]
+        v0, vf = v_prev.get(j,0.0), 0.0
         a0[j] = q0
         a1[j] = v0
-        a2[j] = acc0 / 2
-        a3[j] = (20*(qf - q0) - (8*vf + 12*v0)*T - (3*acc0 - accf)*T**2) / (2*T**3)
-        a4[j] = (30*(q0 - qf) + (14*vf + 16*v0)*T + (3*acc0 - 2*accf)*T**2) / (2*T**4)
-        a5[j] = (12*(qf - q0) - (6*vf + 6*v0)*T - (acc0 - accf)*T**2) / (2*T**5)
+        a2[j] = 0.0
+        a3[j] = (20*(qf-q0) - (8*vf+12*v0)*T)/ (2*T**3)
+        a4[j] = (30*(q0-qf) + (14*vf+16*v0)*T)/ (2*T**4)
+        a5[j] = (12*(qf-q0) - (6*vf+6*v0)*T)/ (2*T**5)
 
-    # Midpoint bump parameters for expressive joints
-    bump_joints = ["wrist_roll", "gripper"]
-    bump_amplitude = {
-        "wrist_roll": 0.8*(JOINT_LIMITS["wrist_roll"][1]-JOINT_LIMITS["wrist_roll"][0])/2 * sign_toggle,
-        "gripper": 0.6*(JOINT_LIMITS["gripper"][1]-JOINT_LIMITS["gripper"][0])
-    }
+    # Optional expressive bump for wrist/gripper
+    bump_joints = ["wrist_roll","gripper"]
+    bump_amplitude = {"wrist_roll": 0.8*180/2*sign_toggle,
+                      "gripper": 0.6*91}  # adjust ranges as needed
 
+    # Main loop
     while True:
         t = time.perf_counter() - start_time
-        if t > move_duration:
+        if t > T:
             break
+        pos_dict, vel_dict, acc_dict = {}, {}, {}
+        for j in joint_names:
+            if j in active_joints:
+                pos = a0[j] + a1[j]*t + a2[j]*t**2 + a3[j]*t**3 + a4[j]*t**4 + a5[j]*t**5
+                vel = a1[j] + 2*a2[j]*t + 3*a3[j]*t**2 + 4*a4[j]*t**3 + 5*a5[j]*t**4
+                acc = 2*a2[j] + 6*a3[j]*t + 12*a4[j]*t**2 + 20*a5[j]*t**3
+                # add bump if needed
+                if j in bump_joints:
+                    pos += bump_amplitude[j]*np.sin(np.pi*t/T)
+            else:
+                pos = start_pose[j]
+                vel = 0.0
+                acc = 0.0
 
-        pos_dict = {}
-        for j in start_pose:
-            q = a0[j] + a1[j]*t + a2[j]*t**2 + a3[j]*t**3 + a4[j]*t**4 + a5[j]*t**5
-            # Add midpoint bump for wrist/gripper
-            if j in bump_joints:
-                q += bump_amplitude[j] * np.sin(np.pi * t / move_duration)
-            lo, hi = JOINT_LIMITS.get(j, (-999, 999))
-            q = np.clip(q, lo, hi)
-            pos_dict[j] = q
-        # print(f"[DEBUG] t={t:.3f}s pos_dict: {pos_dict}")
+            pos_dict[j] = pos
+            vel_dict[j] = vel
+            acc_dict[j] = acc
+
+        # Write to bus
         bus.sync_write("Goal_Position", offset_config(pos_dict), normalize=True)
+
+        # Log
+        if logger:
+            logger.log(pos_dict, vel_dict, acc_dict)
+
         time.sleep(dt)
 
-    # Ensure final position is exactly reached
+    # final position
     bus.sync_write("Goal_Position", offset_config(target_pose), normalize=True)
 
-    # Compute end velocities (for continuity to next segment)
-    v_end = {}
-    for j in start_pose:
-        T = move_duration
-        v_end[j] = a1[j] + 2*a2[j]*T + 3*a3[j]*T**2 + 4*a4[j]*T**3 + 5*a5[j]*T**4
+    # end velocities
+    v_end = {j: a1[j]+3*a3[j]*T**2+4*a4[j]*T**3+5*a5[j]*T**4 for j in active_joints}
     return v_end

@@ -42,8 +42,8 @@ JOINT_LIMITS = {
 SECTION_RULES = {
     "intro": {"shoulder_amplitude": 0.3, "wrist_amplitude": 1.0, "gripper_fraction": 0.2},
     "verse": {"shoulder_amplitude": 0.5, "wrist_amplitude": 1.0, "gripper_fraction": 0.0},
-    "chorus": {"shoulder_amplitude": 1.0, "wrist_amplitude": 1.0, "gripper_fraction": 0.0},
-    "instr": {"shoulder_amplitude": 1.0, "wrist_amplitude": 1.0, "gripper_fraction": 0.0},
+    "chorus": {"shoulder_amplitude": 0.8, "wrist_amplitude": 1.0, "gripper_fraction": 0.0},
+    "inst": {"shoulder_amplitude": 1.0, "wrist_amplitude": 1.0, "gripper_fraction": 0.0},
     "end": {"shoulder_amplitude": 0.2, "wrist_amplitude": 1.0, "gripper_fraction": 0.3}
 }
 
@@ -80,6 +80,8 @@ def detect_tempo(beats):
     avg_interval = np.mean(intervals)
     tempo_bpm = 60.0 / avg_interval
     N = max(1, round(DESIRED_MOVE_TIME / avg_interval))
+    if tempo_bpm>110:
+        N=N+1
     print(f"Detected tempo ≈ {tempo_bpm:.1f} BPM → moving every N={N} beats (avg interval {avg_interval:.3f}s)")
     return N, avg_interval, tempo_bpm
 
@@ -89,7 +91,7 @@ def init_music():
 
 def setup_robot():
     calibration = load_calibration(ROBOT_NAME)
-    bus = setup_motors(calibration, PORT_ID, gains={"P": 10, "I": 5, "D": 4})
+    bus = setup_motors(calibration, PORT_ID, gains={"P": 32, "I": 0, "D": 15})
     start_pose = bus.sync_read("Present_Position")
     print("Recorded actual starting pose:", start_pose)
     return bus, start_pose
@@ -114,7 +116,7 @@ def map_music_to_pose_features(base_pose, beat, sign_toggle, rules):
         min_pan, max_pan = JOINT_LIMITS["shoulder_pan"]
         base = base_pose["shoulder_pan"]
         max_delta = (max_pan - min_pan) / 2.0   # half-range
-        raw = base + energy * rules["shoulder_amplitude"] * max_delta * sign_toggle
+        raw = base+ energy * rules["shoulder_amplitude"] * max_delta * sign_toggle
         pose["shoulder_pan"] = float(np.clip(raw, min_pan, max_pan))
 
     # wrist_roll from tempo
@@ -137,43 +139,128 @@ def map_music_to_pose_features(base_pose, beat, sign_toggle, rules):
     # other joints stay as in base_pose
     return pose, energy, tempo
 
-def add_midpoint_waypoint(current_pose, target_pose, sign_toggle, roll_amplitude=0.8, grip_open_frac=0.6):
-    midpoint = {}
-    for joint in current_pose:
-        if joint == "wrist_roll":
-            min_r, max_r = JOINT_LIMITS.get("wrist_roll", (-180.0, 180.0))
-            center = 0.5 * (min_r + max_r)
-            range_r = (max_r - min_r) / 2.0
-            overshoot = center + sign_toggle * range_r * roll_amplitude
-            midpoint[joint] = float(np.clip(overshoot, min_r, max_r))
-        elif joint == "gripper":
-            min_g, max_g = JOINT_LIMITS.get("gripper", (0.0, 100.0))
-            midpoint[joint] = float(min_g + (max_g - min_g) * grip_open_frac)
-        else:
-            # If joints missing in target_pose, use current average
-            if joint in target_pose:
-                midpoint[joint] = 0.5 * (current_pose[joint] + target_pose[joint])
-            else:
-                midpoint[joint] = current_pose[joint]
-    return midpoint
 
 # ============================================================
 # MAIN PERFORMANCE LOOP
 # ============================================================
+# def perform_motion_sequence(bus, beats, pose_dict, start_pose):
+#     """
+#     pose_dict is expected to be { section_label: [ pose_obj, ... ], ... }
+#     where pose_obj is a dict containing joint names and numeric values. Optionally a "name" field.
+#     """
+#     # Per-section index map so each section keeps its own cycling index
+#     section_indices = {sec: 0 for sec in pose_dict.keys()}
+#     sign_toggle = 1
+#     v_prev = {joint: 0.0 for joint in start_pose}
+
+#     N, avg_interval, tempo_bpm = detect_tempo(beats)
+#     init_music()
+
+#     # Wait until first beat
+#     first_beat_time = beats[0]["time"]
+#     pygame.mixer.music.play()
+#     print(f"Waiting {first_beat_time:.3f}s until first beat...")
+#     time.sleep(first_beat_time)
+#     start_perf = time.perf_counter()
+
+#     sections = load_sections(SECTION_FILE)
+
+#     for i in range(len(beats) - 1):
+#         if i % N == (N - 1):
+#             beat = beats[i]
+#             current_time = beat["time"]
+
+#             # compute move timing
+#             move_start = max(0.0, current_time - ANTICIPATION)
+#             next_move_time = beats[i + N]["time"] if i + N < len(beats) else beats[-1]["time"] + 1.0
+#             move_duration = max(0.1, next_move_time - move_start - HOLD_MARGIN)
+
+#             # determine current section label and rules
+#             section_label = get_section_for_time(sections, current_time)
+#             rules = SECTION_RULES.get(section_label, SECTION_RULES.get("verse", {}))
+
+#             # pick the list of poses for this section; fallback to concatenation of all sections
+#             available = pose_dict.get(section_label)
+#             if not available:
+#                 # fallback: flatten all section lists into one
+#                 available = []
+#                 for lst in pose_dict.values():
+#                     available.extend(lst)
+
+#             if not available:
+#                 print(f"[WARN] No poses defined anywhere — skipping beat {i}")
+#                 continue
+
+#             # pick current index for this section and advance only within that section
+#             idx = section_indices.get(section_label, 0)
+#             pose_obj = available[idx]
+#             # pose_obj may include a "name" field; remove for base_pose if present
+#             base_pose = {k: float(v) for k, v in pose_obj.items() if k != "name"}
+
+#             # generate dynamic target pose from base and music features
+#             target_pose, energy, tempo = map_music_to_pose_features(base_pose, beat, sign_toggle, rules)
+
+#             # safety clipping for joints that have limits (extra safeguard)
+#             for j, val in list(target_pose.items()):
+#                 if j in JOINT_LIMITS:
+#                     mn, mx = JOINT_LIMITS[j]
+#                     if val < mn or val > mx:
+#                         print(f"[CLIP] joint '{j}' value {val:.3f} out of [{mn},{mx}] -> clipped")
+#                         target_pose[j] = float(np.clip(val, mn, mx))
+
+#             # increment index for that section
+#             section_indices[section_label] = (idx + 1) % len(available)
+#             sp = target_pose.get("shoulder_pan", None)
+#             wr = target_pose.get("wrist_roll", None)
+#             # print status
+#             pose_name = pose_obj.get("name", f"{section_label}[{idx}]")
+#             print(
+#             f"[t={move_start:.3f}s] Beat #{i} → moving to {pose_name} | "
+#             f"section={section_label} | energy={energy:.3f}, tempo={tempo:.1f}, "
+#             f"shoulder_pan={sp}, wrist_roll={wr}"
+#             )
+
+#             # wait until move_start (synchronized to music playback)
+#             now = time.perf_counter() - start_perf + first_beat_time
+#             time.sleep(max(0.0, move_start - now))
+
+#             # read current pose
+#             current_pose = bus.sync_read("Present_Position")
+
+#             # call motion executor (your perform_quintic_move_smooth should accept these joints)
+#             v_prev = perform_quintic_move_smooth(bus, current_pose, target_pose, move_duration, v_prev, sign_toggle=sign_toggle)
+
+#             # alternate sign for next cycle
+#             sign_toggle *= -1
+
+#         # align with next beat (sleep until next beat)
+#         now = time.perf_counter() - start_perf + first_beat_time
+#         next_beat_time = beats[i + 1]["time"]
+#         # time.sleep(max(0.0, next_beat_time - now))
+
+#     # wrap up
+#     print("Song ending → returning to start pose...")
+#     move_to_pose_cubic_cont(bus, bus.sync_read("Present_Position"), start_pose, 1.5, v_prev)
+#     hold_position(bus, 0.5)
+
 def perform_motion_sequence(bus, beats, pose_dict, start_pose):
     """
-    pose_dict is expected to be { section_label: [ pose_obj, ... ], ... }
-    where pose_obj is a dict containing joint names and numeric values. Optionally a "name" field.
+    pose_dict: { section_label: [ pose_obj, ... ], ... }
+    pose_obj: dict of joint names -> values, optionally with "name" field.
+    Uses perform_quintic_move for smooth motion with optional logging.
     """
-    # Per-section index map so each section keeps its own cycling index
     section_indices = {sec: 0 for sec in pose_dict.keys()}
     sign_toggle = 1
+    moves_done = 0
+    max_moves = 15
     v_prev = {joint: 0.0 for joint in start_pose}
+
+    # Setup logger
+    joint_logger = JointLogger(list(start_pose.keys()))
 
     N, avg_interval, tempo_bpm = detect_tempo(beats)
     init_music()
 
-    # Wait until first beat
     first_beat_time = beats[0]["time"]
     pygame.mixer.music.play()
     print(f"Waiting {first_beat_time:.3f}s until first beat...")
@@ -187,81 +274,68 @@ def perform_motion_sequence(bus, beats, pose_dict, start_pose):
             beat = beats[i]
             current_time = beat["time"]
 
-            # compute move timing
             move_start = max(0.0, current_time - ANTICIPATION)
             next_move_time = beats[i + N]["time"] if i + N < len(beats) else beats[-1]["time"] + 1.0
             move_duration = max(0.1, next_move_time - move_start - HOLD_MARGIN)
 
-            # determine current section label and rules
             section_label = get_section_for_time(sections, current_time)
             rules = SECTION_RULES.get(section_label, SECTION_RULES.get("verse", {}))
 
-            # pick the list of poses for this section; fallback to concatenation of all sections
             available = pose_dict.get(section_label)
             if not available:
-                # fallback: flatten all section lists into one
-                available = []
-                for lst in pose_dict.values():
-                    available.extend(lst)
+                available = [pose for lst in pose_dict.values() for pose in lst]
 
             if not available:
-                print(f"[WARN] No poses defined anywhere — skipping beat {i}")
+                print(f"[WARN] No poses defined — skipping beat {i}")
                 continue
 
-            # pick current index for this section and advance only within that section
             idx = section_indices.get(section_label, 0)
             pose_obj = available[idx]
-            # pose_obj may include a "name" field; remove for base_pose if present
-            base_pose = {k: float(v) for k, v in pose_obj.items() if k != "name"}
+            base_pose = {k: float(v) for k,v in pose_obj.items() if k != "name"}
 
-            # generate dynamic target pose from base and music features
             target_pose, energy, tempo = map_music_to_pose_features(base_pose, beat, sign_toggle, rules)
 
-            # safety clipping for joints that have limits (extra safeguard)
-            for j, val in list(target_pose.items()):
+            # clip joints
+            for j,val in list(target_pose.items()):
                 if j in JOINT_LIMITS:
-                    mn, mx = JOINT_LIMITS[j]
-                    if val < mn or val > mx:
-                        print(f"[CLIP] joint '{j}' value {val:.3f} out of [{mn},{mx}] -> clipped")
-                        target_pose[j] = float(np.clip(val, mn, mx))
+                    mn,mx = JOINT_LIMITS[j]
+                    target_pose[j] = float(np.clip(val, mn, mx))
 
-            # increment index for that section
             section_indices[section_label] = (idx + 1) % len(available)
-            sp = target_pose.get("shoulder_pan", None)
-            wr = target_pose.get("wrist_roll", None)
-            # print status
             pose_name = pose_obj.get("name", f"{section_label}[{idx}]")
-            print(
-            f"[t={move_start:.3f}s] Beat #{i} → moving to {pose_name} | "
-            f"section={section_label} | energy={energy:.3f}, tempo={tempo:.1f}, "
-            f"shoulder_pan={sp}, wrist_roll={wr}"
-            )
+            print(f"[t={move_start:.3f}s] Beat #{i} → {pose_name} | section={section_label} "
+                  f"| energy={energy:.3f}, tempo={tempo:.1f} | "
+                  f"shoulder_pan={target_pose.get('shoulder_pan')}, wrist_roll={target_pose.get('wrist_roll')}")
 
-            # wait until move_start (synchronized to music playback)
             now = time.perf_counter() - start_perf + first_beat_time
             time.sleep(max(0.0, move_start - now))
 
-            # read current pose
             current_pose = bus.sync_read("Present_Position")
 
-            # optionally compute a midpoint (not used by the quintic in so101_utils unless you modify it)
-            mid_pose = add_midpoint_waypoint(current_pose, target_pose, sign_toggle)
+            # Call quintic move with logging
+            v_prev = perform_quintic_move(
+                bus, current_pose, target_pose, move_duration,
+                v_prev, sign_toggle,
+                dt=0.005,
+                logger=joint_logger,
+                active_joints=list(target_pose.keys())
+            )
 
-            # call motion executor (your perform_quintic_move_smooth should accept these joints)
-            v_prev = perform_quintic_move_smooth(bus, current_pose, target_pose, move_duration, v_prev, sign_toggle=sign_toggle)
-
-            # alternate sign for next cycle
             sign_toggle *= -1
-
-        # align with next beat (sleep until next beat)
-        now = time.perf_counter() - start_perf + first_beat_time
-        next_beat_time = beats[i + 1]["time"]
-        time.sleep(max(0.0, next_beat_time - now))
+            moves_done += 1
+            if moves_done >= max_moves:
+                print(f"[INFO] Reached {max_moves} poses → stopping performance loop")
+                break
 
     # wrap up
     print("Song ending → returning to start pose...")
     move_to_pose_cubic_cont(bus, bus.sync_read("Present_Position"), start_pose, 1.5, v_prev)
     hold_position(bus, 0.5)
+
+    # Save logger
+    log_filename = PLOTS_DIR / f"joint_log_{int(time.time())}.npz"
+    joint_logger.save(log_filename)
+
 
 # ============================================================
 # ENTRY POINT
