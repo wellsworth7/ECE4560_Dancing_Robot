@@ -1,0 +1,29 @@
+{
+  "path": "/storage/ice1/4/1/mranjan9/mranjan9/binary_sunset.mp3",
+  "bpm": null,
+  "beats": [],
+  "downbeats": [],
+  "beat_positions": [],
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 5.0,
+      "label": "intro"
+    },
+    {
+      "start": 5.0,
+      "end": 22.00,
+      "label": "verse"
+    },
+    {
+      "start": 22.00,
+      "end": 36.0,
+      "label": "inst"
+    },
+    {
+      "start": 36.0,
+      "end": 48.45,
+      "label": "end"
+    }
+  ]
+}

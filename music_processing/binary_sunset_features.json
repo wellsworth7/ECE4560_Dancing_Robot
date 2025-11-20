@@ -1,0 +1,658 @@
+[
+  {
+    "time": 0.29024943310657597,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.02267913892865181,
+    "amplitude": 0.009143772535026073,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 0.7430385487528345,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.05749252438545227,
+    "amplitude": 0.023838093504309654,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 1.195827664399093,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.06731798499822617,
+    "amplitude": 0.02094191685318947,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 1.6486167800453515,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.08709806948900223,
+    "amplitude": 0.03426196798682213,
+    "frequency_band": "low"
+  },
+  {
+    "time": 2.10140589569161,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.07787788659334183,
+    "amplitude": 0.024961333721876144,
+    "frequency_band": "low"
+  },
+  {
+    "time": 2.5658049886621317,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.07652700692415237,
+    "amplitude": 0.022348420694470406,
+    "frequency_band": "low"
+  },
+  {
+    "time": 3.006984126984127,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.09590674191713333,
+    "amplitude": 0.033065568655729294,
+    "frequency_band": "low"
+  },
+  {
+    "time": 3.4597732426303853,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.08056380599737167,
+    "amplitude": 0.027111731469631195,
+    "frequency_band": "low"
+  },
+  {
+    "time": 3.924172335600907,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.09402228146791458,
+    "amplitude": 0.03474994748830795,
+    "frequency_band": "low"
+  },
+  {
+    "time": 4.3769614512471655,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.1162184551358223,
+    "amplitude": 0.035728804767131805,
+    "frequency_band": "low"
+  },
+  {
+    "time": 4.841360544217687,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.10479706525802612,
+    "amplitude": 0.028759699314832687,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 5.282539682539682,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.08878393471240997,
+    "amplitude": 0.0323094017803669,
+    "frequency_band": "low"
+  },
+  {
+    "time": 5.735328798185941,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.07043325155973434,
+    "amplitude": 0.025263294577598572,
+    "frequency_band": "low"
+  },
+  {
+    "time": 6.188117913832199,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.10538870096206665,
+    "amplitude": 0.024713825434446335,
+    "frequency_band": "low"
+  },
+  {
+    "time": 6.6525170068027215,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.1164870411157608,
+    "amplitude": 0.029907984659075737,
+    "frequency_band": "low"
+  },
+  {
+    "time": 7.1053061224489795,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.15366153419017792,
+    "amplitude": 0.04037874564528465,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 7.546485260770975,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.17685261368751526,
+    "amplitude": 0.05032910406589508,
+    "frequency_band": "low"
+  },
+  {
+    "time": 7.9760544217687075,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.13599471747875214,
+    "amplitude": 0.037709228694438934,
+    "frequency_band": "low"
+  },
+  {
+    "time": 8.417233560090702,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.13151758909225464,
+    "amplitude": 0.03179062530398369,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 8.870022675736962,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.1034807339310646,
+    "amplitude": 0.03176606446504593,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 9.311201814058958,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.13530777394771576,
+    "amplitude": 0.04818194732069969,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 9.822040816326531,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.12338464707136154,
+    "amplitude": 0.030418748036026955,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 10.309659863945578,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.1363477259874344,
+    "amplitude": 0.04529327526688576,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 10.785668934240363,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.11684965342283249,
+    "amplitude": 0.023556873202323914,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 11.250068027210885,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.12181406468153,
+    "amplitude": 0.03342945873737335,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 11.714467120181405,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.11677005141973495,
+    "amplitude": 0.04603516310453415,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 12.19047619047619,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.07903511077165604,
+    "amplitude": 0.0182581078261137,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 12.64326530612245,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.08432021737098694,
+    "amplitude": 0.025674594566226006,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 13.096054421768708,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.11855755001306534,
+    "amplitude": 0.040585488080978394,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 13.537233560090703,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.13501520454883575,
+    "amplitude": 0.04078558087348938,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 13.990022675736961,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.12485144287347794,
+    "amplitude": 0.041696447879076004,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 14.431201814058957,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.08108867704868317,
+    "amplitude": 0.029412468895316124,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 14.872380952380952,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.10779902338981628,
+    "amplitude": 0.034173909574747086,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 15.313560090702948,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.14338551461696625,
+    "amplitude": 0.042733315378427505,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 15.766349206349206,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.0863557755947113,
+    "amplitude": 0.01801377162337303,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 16.23074829931973,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.11464914679527283,
+    "amplitude": 0.029104232788085938,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 16.69514739229025,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.13651761412620544,
+    "amplitude": 0.04086989536881447,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 17.19437641723356,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.12628598511219025,
+    "amplitude": 0.03938474506139755,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 17.635555555555555,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.15570753812789917,
+    "amplitude": 0.04388885572552681,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 18.088344671201813,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.15834540128707886,
+    "amplitude": 0.04203866049647331,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 18.552743764172334,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.11682786047458649,
+    "amplitude": 0.03456847369670868,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 19.017142857142858,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.14432018995285034,
+    "amplitude": 0.03599242866039276,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 19.481541950113378,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.14949683845043182,
+    "amplitude": 0.047484032809734344,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 19.9459410430839,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.1551557183265686,
+    "amplitude": 0.05073116347193718,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 20.44517006802721,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.16528847813606262,
+    "amplitude": 0.06529930979013443,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 20.897959183673468,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.16105520725250244,
+    "amplitude": 0.06972330808639526,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 21.385578231292516,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.18105444312095642,
+    "amplitude": 0.06061410903930664,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 21.861587301587303,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.17139995098114014,
+    "amplitude": 0.04361436143517494,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 22.325986394557823,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.13416458666324615,
+    "amplitude": 0.02888030931353569,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 22.77877551020408,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.2137608677148819,
+    "amplitude": 0.0526985302567482,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 23.18512471655329,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.359929621219635,
+    "amplitude": 0.08200962096452713,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 23.61469387755102,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.4428749084472656,
+    "amplitude": 0.07367752492427826,
+    "frequency_band": "low"
+  },
+  {
+    "time": 24.03265306122449,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.42553192377090454,
+    "amplitude": 0.08578390628099442,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 24.450612244897957,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.479956716299057,
+    "amplitude": 0.09850442409515381,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 24.88018140589569,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.49113479256629944,
+    "amplitude": 0.08826956897974014,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 25.391020408163264,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.558146059513092,
+    "amplitude": 0.09104842692613602,
+    "frequency_band": "low"
+  },
+  {
+    "time": 25.820589569160997,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.5639147758483887,
+    "amplitude": 0.10614604502916336,
+    "frequency_band": "low"
+  },
+  {
+    "time": 26.284988662131518,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.44818031787872314,
+    "amplitude": 0.07805029302835464,
+    "frequency_band": "low"
+  },
+  {
+    "time": 26.73777777777778,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.5843486189842224,
+    "amplitude": 0.10008526593446732,
+    "frequency_band": "low"
+  },
+  {
+    "time": 27.341496598639456,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.6425877213478088,
+    "amplitude": 0.1307341754436493,
+    "frequency_band": "low"
+  },
+  {
+    "time": 27.78267573696145,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.9060538411140442,
+    "amplitude": 0.136287659406662,
+    "frequency_band": "low"
+  },
+  {
+    "time": 28.24707482993197,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.9133440852165222,
+    "amplitude": 0.1347600221633911,
+    "frequency_band": "low"
+  },
+  {
+    "time": 28.665034013605442,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.9589804410934448,
+    "amplitude": 0.16064052283763885,
+    "frequency_band": "low"
+  },
+  {
+    "time": 29.1178231292517,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.7364957332611084,
+    "amplitude": 0.146753191947937,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 29.57061224489796,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.6192132234573364,
+    "amplitude": 0.10798828303813934,
+    "frequency_band": "low"
+  },
+  {
+    "time": 30.035011337868482,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.6000526547431946,
+    "amplitude": 0.10473231226205826,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 30.48780045351474,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.5662215352058411,
+    "amplitude": 0.09432367235422134,
+    "frequency_band": "low"
+  },
+  {
+    "time": 31.02185941043084,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.46549901366233826,
+    "amplitude": 0.07867615669965744,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 31.509478458049887,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.380318284034729,
+    "amplitude": 0.05976228788495064,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 31.997097505668933,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.38063520193099976,
+    "amplitude": 0.06877338141202927,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 32.449886621315194,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.34177014231681824,
+    "amplitude": 0.05953553318977356,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 32.833015873015874,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.31922999024391174,
+    "amplitude": 0.06276296079158783,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 33.30902494331066,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.3441876769065857,
+    "amplitude": 0.0535941980779171,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 33.75020408163265,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.30411213636398315,
+    "amplitude": 0.043982360512018204,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 34.16816326530612,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.3177630603313446,
+    "amplitude": 0.06719666719436646,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 34.56290249433106,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.29864856600761414,
+    "amplitude": 0.051998477429151535,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 34.98086167800454,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.232853963971138,
+    "amplitude": 0.0486672967672348,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 35.42204081632653,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.26315930485725403,
+    "amplitude": 0.05392277613282204,
+    "frequency_band": "low"
+  },
+  {
+    "time": 35.86321995464853,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.25879770517349243,
+    "amplitude": 0.04325953125953674,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 36.29278911564626,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.22066152095794678,
+    "amplitude": 0.03620000183582306,
+    "frequency_band": "mid"
+  },
+  {
+    "time": 36.73396825396826,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.17232953011989594,
+    "amplitude": 0.04099163040518761,
+    "frequency_band": "low"
+  },
+  {
+    "time": 37.151927437641724,
+    "tempo": 132.51201923076923,
+    "beat": true,
+    "energy": 0.1697060614824295,
+    "amplitude": 0.03371833264827728,
+    "frequency_band": "low"
+  }
+]

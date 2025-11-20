@@ -59,8 +59,8 @@ def get_g45(theta5_deg):
 def get_g5t():
     # gripper -> tool/object frame 
     displacement = (0.0, 0.0, -0.1034)
-    # rotation = Rx(90)@Rz(-90)
-    rotation = np.eye(3) #changed - why??
+    rotation = Rx(90)@Rz(-90)
+    #rotation = np.eye(3) #changed - why??
     pose = np.block([[rotation, np.array(displacement).reshape(3,1)],[0, 0, 0, 1]])
     return pose
 
